@@ -10,18 +10,19 @@ namespace ProgramacaoEstruturada.ConsoleApp
             #region Variáveis
             int remover = 0;
             int[] valoresInteiros = new int[10];
-            string mensagem;
+            int contadorNegativos = 0;
+            int menorValor;
+            bool temNegativos = false;
             #endregion
             ReceberValores(valoresInteiros);
             EncontrarMaiorValor(ref valoresInteiros);
-            EncontrarMenorValor(valoresInteiros);
+            EncontrarMenorValor(valoresInteiros, out menorValor);
             EncontrarValorMedio(valoresInteiros);
             EncontrarTresMaioresValores(valoresInteiros);
-            EncontrarValoresNegativos(valoresInteiros);
+            EncontrarValoresNegativos(valoresInteiros, contadorNegativos, temNegativos);
             MostrarValores(valoresInteiros);
-            Console.WriteLine("Informe o valor que da sequência que deseja remover:");
-            remover = int.Parse(Console.ReadLine());
             RemoverUmValor(valoresInteiros, remover);
+            Console.ReadKey();
         }
         #region Métodos
         private static void ReceberValores(int[] valoresInteiros)
@@ -31,28 +32,27 @@ namespace ProgramacaoEstruturada.ConsoleApp
                 Console.Write(">" + (numero + 1) + ": ");
                 valoresInteiros[numero] = int.Parse(Console.ReadLine());
             }
+            Console.Clear();
         } // Ok
         static void EncontrarMaiorValor(ref int[] valoresInteiros)
         {
-            MensagemInformativa("Maiores valores:", ConsoleColor.Green);
+            MensagemInformativa("Maior valor:", ConsoleColor.Green);
             Array.Sort(valoresInteiros);
             Array.Reverse(valoresInteiros);
             for (int i = 0; i < 1; i++)
             {
-                Console.WriteLine("Maior valor: " + valoresInteiros[i]);
+                Console.WriteLine(valoresInteiros[i]);
             }
+            Console.WriteLine();
         } // Ok
-        static void EncontrarMenorValor(int[] valoresInteiros)
+        static void EncontrarMenorValor(int[] valoresInteiros, out int menorValor)
         {
-            MensagemInformativa("Menores valores:", ConsoleColor.Red) ;
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.WriteLine("Menores valores:");
-            //Console.ResetColor();
+            menorValor = 0;
+            MensagemInformativa("Menor valor:", ConsoleColor.Red);
             Array.Sort(valoresInteiros);
-            for (int i = 0; i < 1; i++)
-            {
-                Console.WriteLine("Menor valor: " + valoresInteiros[i]);
-            }
+            menorValor = valoresInteiros[0];
+            Console.WriteLine(menorValor);
+            Console.WriteLine();
         } // Ok
         static void EncontrarValorMedio(int[] valoresInteiros)
         {
@@ -64,7 +64,8 @@ namespace ProgramacaoEstruturada.ConsoleApp
             }
             float media = somador / divisor;
             MensagemInformativa("Média dos valores:", ConsoleColor.DarkMagenta);
-            Console.WriteLine("Media: " + media);
+            Console.WriteLine(media);
+            Console.WriteLine();
         } // Ok
         static void EncontrarTresMaioresValores(int[] valoresInteiros)
         {
@@ -75,55 +76,67 @@ namespace ProgramacaoEstruturada.ConsoleApp
             {
                 Console.WriteLine((i+1) + "º maior valor: "+ valoresInteiros[i]);
             }
+            Console.WriteLine();
         } // Ok
-        static void EncontrarValoresNegativos(int[] valoresInteiros)
-        {
-            bool temNegativos = false;
-            int[] valoresNegativos = new int[valoresInteiros.Length];
+        static void EncontrarValoresNegativos(int[] valoresInteiros, int contadorNegativos, bool temNegativos)
+        {  
+            Array.Reverse(valoresInteiros);
             for (int i = 0; i < valoresInteiros.Length; i++)
             {
                 if(valoresInteiros[i] < 0)
                 {
-                    valoresNegativos[i] = valoresInteiros[i];
-                }
-            }
-            Array.Sort(valoresNegativos);
-            valoresNegativos = valoresNegativos.Where(T => T != 0).ToArray();
-            for (int i = 0; i <= valoresNegativos.Length; i++)
-            {
-                if (valoresNegativos.Contains(i))
-                {
                     temNegativos = true;
-                    valoresNegativos[i] += valoresNegativos[i];
                 }
             }
-            if(temNegativos == true) {
-                MensagemInformativa("Valores negativos: ", ConsoleColor.DarkRed);
-                for (int i = 0; i < valoresNegativos.Length; i++)
+            if(temNegativos == true) { 
+            MensagemInformativa("Valores negativos: ", ConsoleColor.DarkRed);
+                foreach (int valor in valoresInteiros)
                 {
-                    Console.WriteLine((i+1) + "º valor negativo: " + valoresNegativos[i]);
+                    if(valor < 0)
+                    {
+                        contadorNegativos++;
+                    }
                 }
-            } else 
+                for (int i = 0; i < contadorNegativos; i++)
+                {
+                    Console.WriteLine(valoresInteiros[i]);
+                }
+            } else
             {
-                MensagemInformativa("Valores negativos: ", ConsoleColor.DarkRed);
-                Console.WriteLine("Sem valores negativos nessa sequência!");
+                MensagemInformativa("Sem números negativos nesse array", ConsoleColor.Red);
             }
+            Console.WriteLine();
         } // Ok
         static void MostrarValores(int[] valoresInteiros)
         {
+            Array.Reverse(valoresInteiros);
             MensagemInformativa("Valores da sequência ordenada: ", ConsoleColor.DarkCyan);
             for (int i = 0; i < valoresInteiros.Length; i++)
             {
-                Console.WriteLine((i+1) + "º valor da sequência: " + valoresInteiros[i]);
+                Console.WriteLine((i+1) + "º: " + valoresInteiros[i]);
             }
-        }
+            Console.WriteLine();
+        } // Ok
         static void RemoverUmValor(int[] valoresInteiros, int remover)
         {
-            MensagemInformativa("Sequência após remover: ", ConsoleColor.DarkGray);
-            Console.WriteLine("Item removido: " + remover);
+            Console.WriteLine("Informe o valor que da sequência que deseja remover:");
+            remover = int.Parse(Console.ReadLine());
+            int iNovoArray = 0;
+            int[] novoArray = new int[9];
             for (int i = 0; i < valoresInteiros.Length; i++)
             {
-                Console.WriteLine((i + 1) + "º valor da sequência, após remover: " + remover);
+                if(valoresInteiros[i] != remover)
+                {
+                    novoArray[iNovoArray] = valoresInteiros[i];
+                    iNovoArray++;
+                }
+            }
+            Console.WriteLine("item removido: " + remover);
+            Console.WriteLine();
+            MensagemInformativa("Sequência após remover: ", ConsoleColor.DarkGray);
+            for (int i = 0; i < novoArray.Length; i++)
+            {
+                Console.WriteLine((i + 1) + ": " + novoArray[i]);
             }
         }
         static void MensagemInformativa(string mensagem, ConsoleColor cor)
@@ -131,7 +144,7 @@ namespace ProgramacaoEstruturada.ConsoleApp
             Console.ForegroundColor = cor;
             Console.WriteLine(mensagem);
             Console.ResetColor();
-        }
+        } // Ok
         #endregion
     }
 }
