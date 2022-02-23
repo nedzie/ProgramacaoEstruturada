@@ -12,20 +12,54 @@ namespace ProgramacaoEstruturada.ConsoleApp
             int[] valoresInteiros = new int[10];
             int contadorNegativos = 0;
             int menorValor;
+            int funcionalidades = 0;
             bool temNegativos = false;
             #endregion
+
             ReceberValores(valoresInteiros);
-            EncontrarMaiorValor(ref valoresInteiros);
-            EncontrarMenorValor(valoresInteiros, out menorValor);
-            EncontrarValorMedio(valoresInteiros);
-            EncontrarTresMaioresValores(valoresInteiros);
-            EncontrarValoresNegativos(valoresInteiros, contadorNegativos, temNegativos);
-            MostrarValores(valoresInteiros);
-            RemoverUmValor(valoresInteiros, remover);
-            Console.ReadKey();
+            while(true)
+            {
+                funcionalidades = MenuDeFuncionalidades(funcionalidades);
+                switch(funcionalidades) 
+                { 
+                    case 0:
+                    EncontrarMaiorValor(ref valoresInteiros);
+                        break;
+                    case 1:
+                    EncontrarMenorValor(valoresInteiros, out menorValor);
+                        break;
+                    case 2:
+                    EncontrarValorMedio(valoresInteiros);
+                        break;
+                    case 3:
+                    EncontrarTresMaioresValores(valoresInteiros);
+                        break;
+                    case 4:
+                    EncontrarValoresNegativos(valoresInteiros, contadorNegativos, temNegativos);
+                        break;
+                    case 5:
+                    MostrarValores(valoresInteiros);
+                        break;
+                    case 6:
+                        valoresInteiros = RemoverUmValor(valoresInteiros, remover);
+                        break;
+                    case 7:
+                        goto sair;
+                }
+            }
+        sair:;
         }
         #region Métodos
-        private static void ReceberValores(int[] valoresInteiros)
+        static int MenuDeFuncionalidades(int funcionalidades)
+        {
+            Console.Write("0 - Encontrar maior valor\n1 - Encontrar menor valor\n2 - Encontrar valor médio\n" +
+                          "3 - Encontrar 3 maiores valores\n4 - Encontrar valores negativos\n5 - Mostrar todos os valores\n" +
+                          "6 - Remover um valor\n7 - Sair\n");
+            Console.WriteLine("Selecione uma das funcionalidades: ");
+            funcionalidades = int.Parse(Console.ReadLine());
+            return funcionalidades;
+        }
+        static void ReceberValores(int[] valoresInteiros)
         {
             for (int numero = 0; numero < 10; numero++)
             {
@@ -50,12 +84,19 @@ namespace ProgramacaoEstruturada.ConsoleApp
             menorValor = 0;
             MensagemInformativa("Menor valor:", ConsoleColor.Red);
             Array.Sort(valoresInteiros);
-            menorValor = valoresInteiros[0];
+            for (int i = 0; i < valoresInteiros.Length; i++)
+            {
+                if(valoresInteiros[i] < menorValor)
+                {
+                    menorValor = valoresInteiros[i];
+                }
+            }
             Console.WriteLine(menorValor);
             Console.WriteLine();
         } // Ok
         static void EncontrarValorMedio(int[] valoresInteiros)
         {
+            Array.Sort(valoresInteiros);
             int somador = 0;
             int divisor = valoresInteiros.Length;
             for (int i = 0; i < valoresInteiros.Length; i++)
@@ -66,7 +107,7 @@ namespace ProgramacaoEstruturada.ConsoleApp
             MensagemInformativa("Média dos valores:", ConsoleColor.DarkMagenta);
             Console.WriteLine(media);
             Console.WriteLine();
-        } // Ok
+        }
         static void EncontrarTresMaioresValores(int[] valoresInteiros)
         {
             MensagemInformativa("Maiores valores: ", ConsoleColor.DarkYellow);
@@ -77,7 +118,7 @@ namespace ProgramacaoEstruturada.ConsoleApp
                 Console.WriteLine((i+1) + "º maior valor: "+ valoresInteiros[i]);
             }
             Console.WriteLine();
-        } // Ok
+        }
         static void EncontrarValoresNegativos(int[] valoresInteiros, int contadorNegativos, bool temNegativos)
         {  
             Array.Reverse(valoresInteiros);
@@ -106,7 +147,7 @@ namespace ProgramacaoEstruturada.ConsoleApp
                 MensagemInformativa("Sem números negativos nesse array", ConsoleColor.Red);
             }
             Console.WriteLine();
-        } // Ok
+        }
         static void MostrarValores(int[] valoresInteiros)
         {
             Array.Reverse(valoresInteiros);
@@ -116,19 +157,48 @@ namespace ProgramacaoEstruturada.ConsoleApp
                 Console.WriteLine((i+1) + "º: " + valoresInteiros[i]);
             }
             Console.WriteLine();
-        } // Ok
-        static void RemoverUmValor(int[] valoresInteiros, int remover)
+        }
+        static int[] RemoverUmValor(int[] valoresInteiros, int remover)
         {
             Console.WriteLine("Informe o valor que da sequência que deseja remover:");
             remover = int.Parse(Console.ReadLine());
-            int iNovoArray = 0;
-            int[] novoArray = new int[9];
+            int contadorRemocoes = 0;
+            for (int y = 0; y < valoresInteiros.Length; y++)
+            {
+                if(remover == valoresInteiros[y])
+                {
+                    contadorRemocoes++;
+                }
+            }
+            int z = 0;
+            int[] posicoesDeremocao = new int[contadorRemocoes];
+            for (int x = 0; x < valoresInteiros.Length; x++)
+            {
+                if(remover == valoresInteiros[x])
+                {
+                    posicoesDeremocao[z] = x;
+                    z++;
+                }
+            }
+            Console.WriteLine("Foi encontrado o número " + remover + " nas seguintes posições do array: ");
+            foreach (int h in posicoesDeremocao)
+            {
+                Console.Write(h + ", ");
+            }
+            Console.WriteLine("Em qual das duas posições gostaria de remover?");
+            int resposta = int.Parse(Console.ReadLine());
+            remover = resposta;
+            int posicao = 0;
+            int[] novoArray = new int[valoresInteiros.Length-1]; // Obrigado José
             for (int i = 0; i < valoresInteiros.Length; i++)
             {
-                if(valoresInteiros[i] != remover)
+                if(i == remover)
                 {
-                    novoArray[iNovoArray] = valoresInteiros[i];
-                    iNovoArray++;
+                    continue;
+                } 
+                else {
+                    novoArray[posicao] = valoresInteiros[i];
+                    posicao++;
                 }
             }
             Console.WriteLine("item removido: " + remover);
@@ -138,9 +208,11 @@ namespace ProgramacaoEstruturada.ConsoleApp
             {
                 Console.WriteLine((i + 1) + ": " + novoArray[i]);
             }
+            return novoArray;
         }
         static void MensagemInformativa(string mensagem, ConsoleColor cor)
         {
+            Console.WriteLine();
             Console.ForegroundColor = cor;
             Console.WriteLine(mensagem);
             Console.ResetColor();
