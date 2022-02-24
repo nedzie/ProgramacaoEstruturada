@@ -163,6 +163,7 @@ namespace ProgramacaoEstruturada.ConsoleApp
             Console.WriteLine("Informe o valor que da sequência que deseja remover:");
             remover = int.Parse(Console.ReadLine());
             int contadorRemocoes = 0;
+            int[] novoArray = new int[valoresInteiros.Length - 1]; // Obrigado José
             for (int y = 0; y < valoresInteiros.Length; y++)
             {
                 if(remover == valoresInteiros[y])
@@ -170,43 +171,68 @@ namespace ProgramacaoEstruturada.ConsoleApp
                     contadorRemocoes++;
                 }
             }
-            int z = 0;
             int[] posicoesDeremocao = new int[contadorRemocoes];
-            for (int x = 0; x < valoresInteiros.Length; x++)
-            {
-                if(remover == valoresInteiros[x])
+            if (contadorRemocoes > 1) { 
+                int z = 0;
+                
+                for (int x = 0; x < valoresInteiros.Length; x++)
                 {
-                    posicoesDeremocao[z] = x;
-                    z++;
+                    if(remover == valoresInteiros[x])
+                    {
+                        posicoesDeremocao[z] = x;
+                        z++;
+                    }
                 }
-            }
-            Console.WriteLine("Foi encontrado o número " + remover + " nas seguintes posições do array: ");
-            foreach (int h in posicoesDeremocao)
-            {
-                Console.Write(h + ", ");
-            }
-            Console.WriteLine("Em qual das duas posições gostaria de remover?");
-            int resposta = int.Parse(Console.ReadLine());
-            remover = resposta;
-            int posicao = 0;
-            int[] novoArray = new int[valoresInteiros.Length-1]; // Obrigado José
-            for (int i = 0; i < valoresInteiros.Length; i++)
-            {
-                if(i == remover)
+                Console.WriteLine("Foi encontrado o número " + remover + " nas seguintes posições do array: ");
+                foreach (int h in posicoesDeremocao)
                 {
-                    continue;
-                } 
-                else {
-                    novoArray[posicao] = valoresInteiros[i];
-                    posicao++;
+                    Console.Write(h + ", ");
                 }
-            }
-            Console.WriteLine("item removido: " + remover);
-            Console.WriteLine();
-            MensagemInformativa("Sequência após remover: ", ConsoleColor.DarkGray);
-            for (int i = 0; i < novoArray.Length; i++)
+                Console.WriteLine("Em qual das duas posições gostaria de remover?");
+                int resposta = int.Parse(Console.ReadLine());
+                remover = resposta;
+                int posicao = 0;
+                novoArray = new int[valoresInteiros.Length-1]; // Obrigado José
+                for (int i = 0; i < valoresInteiros.Length; i++)
+                {
+                    if(i == remover)
+                    {
+                        continue;
+                    } 
+                    else {
+                        novoArray[posicao] = valoresInteiros[i];
+                        posicao++;
+                    }
+                }
+                Console.WriteLine("item removido: " + remover);
+                Console.WriteLine();
+                MensagemInformativa("Sequência após remover: ", ConsoleColor.DarkGray);
+                for (int i = 0; i < novoArray.Length; i++)
+                {
+                    Console.WriteLine((i + 1) + ": " + novoArray[i]);
+                }
+            } else
             {
-                Console.WriteLine((i + 1) + ": " + novoArray[i]);
+                int posicao = 0;
+                for(int i = 0; i < valoresInteiros.Length; i++)
+                {
+                    if (valoresInteiros[i] == remover)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        novoArray[posicao] = valoresInteiros[i];
+                        posicao++;
+                    }
+                }
+                Console.WriteLine("item removido: " + remover);
+                Console.WriteLine();
+                MensagemInformativa("Sequência após remover: ", ConsoleColor.DarkGray);
+                for (int i = 0; i < novoArray.Length; i++)
+                {
+                    Console.WriteLine((i + 1) + ": " + novoArray[i]);
+                }
             }
             return novoArray;
         }
